@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tech Store - Проєкт 2026</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Етап 1: Header (BOM Clock) -->
+    <header>
+        <div class="logo">AI-TECH</div>
+        <nav>
+            <ul>
+                <li><a data-target="home" class="nav-link active">Головна</a></li>
+                <li><a data-target="catalog" class="nav-link">Каталог</a></li>
+                <li><a data-target="basket" class="nav-link">Кошик</a></li>
+                <li><a data-target="contact" class="nav-link">Контакти</a></li>
+                <li><a data-target="about" class="nav-link">Про додаток</a></li>
+            </ul>
+        </nav>
+        <div class="header-tools">
+            <div id="live-clock">--:--:--</div>
+        </div>
+    </header>
+
+    <!-- Етап 1: Main (SPA) -->
+    <main id="main-content">
+        
+        <!-- Секція: Головна -->
+        <section id="home" class="page-section active">
+            <h1 class="hero-title">Майбутнє AI вже тут.</h1>
+            <p class="hero-text">Перший маркетплейс локальних нейромереж, що працюють безпосередньо у вашому браузері.</p>
+            <button class="primary-btn" onclick="document.querySelector('[data-target=\'catalog\']').click()">Перейти до каталогу</button>
+        </section>
+
+        <!-- Секція: Каталог (Етап 2) -->
+        <section id="catalog" class="page-section">
+            <div class="section-header">
+                <h2>Наші AI Моделі</h2>
+                <div class="catalog-controls">
+                    <div class="search-box">
+                        <input type="text" id="catalog-search" placeholder="Пошук за назвою...">
+                    </div>
+                    <select id="category-filter">
+                        <option value="all">Усі категорії</option>
+                        <option value="text">Текст</option>
+                        <option value="image">Зображення</option>
+                        <option value="voice">Голос</option>
+                    </select>
+                </div>
+            </div>
+            <div id="products-list" class="products-grid">
+                <!-- Картки генеруються через JS -->
+            </div>
+        </section>
+
+        <!-- Секція: Кошик (Етап 3-4) -->
+        <section id="basket" class="page-section">
+            <h2>Ваш Кошик</h2>
+            <div id="basket-container">
+                <p id="empty-basket-msg">Кошик порожній.</p>
+            </div>
+            <div id="stats-area" class="stats-box hidden">
+                <p>Кількість моделей: <span id="total-count">0</span></p>
+                <p>Загальна вартість: <span id="total-price">0</span> грн</p>
+            </div>
+        </section>
+
+        <!-- Секція: Контакти (Stage 3) -->
+        <section id="contact" class="page-section">
+            <h2>Зворотний зв'язок</h2>
+            <form id="order-form" class="order-form">
+                <div class="form-group">
+                    <label for="f-name">Ім'я</label>
+                    <input type="text" id="f-name" required>
+                    <div class="error-msg" id="err-name">Ім'я має бути мінімум 2 символи</div>
+                </div>
+                <div class="form-group">
+                    <label for="f-phone">Телефон</label>
+                    <input type="tel" id="f-phone" placeholder="+380..." required>
+                    <div class="error-msg" id="err-phone">Невірний формат телефону (+380...)</div>
+                </div>
+                <div class="form-group">
+                    <label for="f-msg">Повідомлення</label>
+                    <textarea id="f-msg" rows="4"></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Відправити запит</button>
+            </form>
+        </section>
+
+        <!-- Секція: Про додаток (Stage 4) -->
+        <section id="about" class="page-section">
+            <h2>Технічна документація</h2>
+            <div id="dom-demo">
+                <p>Демонстрація ієрархії вузлів DOM:</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Етап 3: Modal Window -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- AI Widget -->
+    <button id="ai-widget-btn">🤖 AI Асистент</button>
+    <div id="ai-window" class="chat-window">
+        <div class="chat-header">
+            <span>AI Helper (Wiki/RAG)</span>
+            <span id="close-chat" style="cursor: pointer;">&times;</span>
+        </div>
+        <div class="chat-area" id="chat-area">
+            <div class="msg ai">Привіт! Чим можу допомогти?</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chat-input" placeholder="Запитай щось...">
+            <button id="chat-send">➤</button>
+        </div>
+    </div>
+
+    <!-- Етап 1: Footer (Navigator) -->
+    <footer>
+        <p>&copy; 2026 Олександр Кобринський. AI-TECH Store.</p>
+        <div id="browser-info" class="system-info"></div>
+    </footer>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
