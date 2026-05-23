@@ -1,0 +1,66 @@
+[
+  {
+    "id": 1,
+    "name": "Predator Spin 240",
+    "price": 2100,
+    "category": "spin",
+    "desc": "Швидкий стрій, карбон TX-30. Ідеально для джигу та твічингу. Довжина: 2.4м, Тест: 5-25г.",
+    "img": "https://picsum.photos/id/16/300/200"
+  },
+  {
+    "id": 2,
+    "name": "River Som Heavy",
+    "price": 3400,
+    "category": "feeder",
+    "desc": "Потужний фідер для сильної течії. Матеріал: графіт IM8. Довжина: 3.6м, Тест: до 200г.",
+    "img": "https://picsum.photos/id/29/300/200"
+  },
+  {
+    "id": 3,
+    "name": "Carp Master Pro",
+    "price": 2850,
+    "category": "carp",
+    "desc": "Далекобійне коропове вудилище з кільцем 50мм. Зручне руків'я EVA. Довжина: 3.9м, Тест: 3.5lb.",
+    "img": "https://picsum.photos/id/28/300/200"
+  },
+  {
+    "id": 4,
+    "name": "Shimano Stradic FL",
+    "price": 6500,
+    "category": "reels",
+    "desc": "Надійна безінерційна котушка з технологією X-Ship. Плавний хід. Розмір: 3000, Підшипники: 6+1.",
+    "img": "https://picsum.photos/id/12/300/200"
+  },
+  {
+    "id": 5,
+    "name": "Воблер Rapala X-Rap",
+    "price": 450,
+    "category": "spin",
+    "desc": "Класичний мінноу для ловлі щуки. Суспендер з шумовою камерою. Вага: 13г, Заглиблення: 1.5м.",
+    "img": "https://picsum.photos/id/13/300/200"
+  },
+  {
+    "id": 6,
+    "name": "Шнур PowerPro",
+    "price": 820,
+    "category": "reels",
+    "desc": "Міцний плетений шнур, 4 жили. Висока стійкість до абразиву. Довжина: 135м, Діаметр: 0.15мм.",
+    "img": "https://picsum.photos/id/14/300/200"
+  },
+  {
+    "id": 7,
+    "name": "Tica Feeder Mentor",
+    "price": 2900,
+    "category": "reels",
+    "desc": "Спеціалізована фідерна котушка з системою байтраннер. Металева шпуля. Розмір: 4000, Підшипники: 7+1.",
+    "img": "https://picsum.photos/id/15/300/200"
+  },
+  {
+    "id": 8,
+    "name": "Keitech Swing Impact",
+    "price": 250,
+    "category": "spin",
+    "desc": "Їстівний силікон з активною грою. Ідеальний для окуня та судака. Розмір: 4 дюйми, В упаковці: 8 шт.",
+    "img": "https://picsum.photos/id/17/300/200"
+  }
+]

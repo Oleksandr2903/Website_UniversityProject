@@ -1,4 +1,4 @@
-import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.0';
+import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.3.2';
 env.allowLocalModels = false;
 
 /* ==========================================================
@@ -17,8 +17,10 @@ const sections = document.querySelectorAll('.page-section');
 navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
         const target = e.target.getAttribute('data-target');
+        
         navLinks.forEach(l => l.classList.remove('active'));
         e.target.classList.add('active');
+
         sections.forEach(sec => {
             sec.style.display = 'none';
             if (sec.id === target) sec.style.display = 'block';
@@ -27,20 +29,26 @@ navLinks.forEach(link => {
 });
 
 document.getElementById('browser-info').innerHTML = 
-    `Платформа: <b>${navigator.platform}</b> | Браузер: <b>${navigator.userAgent.split('/')[0]}</b>`;
+    `Платформа: <b>${navigator.platform}</b> | Браузер: <b>${navigator.userAgent.split(' ')[0]}</b>`;
 
 /* ==========================================================
-   Етап 2: Робота з даними (Масив, Генерація, Фільтрація)
+   Етап 2: робота з даними (Завантаження з db.json)
    ========================================================== */
-const productsDB = [
-    { id: 1, name: "TextMaster AI", price: 1500, category: "text", desc: "Генерація текстів.", img: "https://picsum.photos/id/10/300/200" },
-    { id: 2, name: "PixelArt AI", price: 3200, category: "image", desc: "Створення зображень.", img: "https://picsum.photos/id/20/300/200" },
-    { id: 3, name: "VoiceBot XL", price: 2800, category: "voice", desc: "Клонування голосу.", img: "https://picsum.photos/id/30/300/200" },
-    { id: 4, name: "DevAssist", price: 1100, category: "text", desc: "Помічник у коді.", img: "https://picsum.photos/id/40/300/200" },
-    { id: 5, name: "DesignGen", price: 2000, category: "image", desc: "Створення макетів.", img: "https://picsum.photos/id/50/300/200" }
-];
-
+let productsDB = [];
 const productsList = document.getElementById('products-list');
+
+async function loadDatabase() {
+    try {
+        const response = await fetch('db.json');
+        if (!response.ok) throw new Error(`Статус ${response.status}`);
+        productsDB = await response.json();
+        renderProducts(productsDB);
+    } catch (error) {
+        productsList.innerHTML = `<p style="color:#f85149; font-weight:bold;">Помилка завантаження бази даних: ${error.message}</p>`;
+    }
+}
+
+loadDatabase();
 
 function renderProducts(data) {
     productsList.innerHTML = '';
@@ -48,19 +56,21 @@ function renderProducts(data) {
         const card = document.createElement('div');
         card.className = 'product-card';
         card.dataset.id = item.id;
+        
+        const shortDesc = item.desc.split('. ')[1] || item.desc; 
+
         card.innerHTML = `
             <img src="${item.img}" alt="${item.name}" class="product-img">
             <div class="product-info">
                 <h3>${item.name}</h3>
-                <p class="product-price">${item.price} грн</p>
-                <p style="font-size:0.8rem; color:#94a3b8">${item.desc}</p>
-                <button class="btn-add" data-action="buy" style="margin-top:10px">В кошик</button>
+                <p style="color: var(--accent); font-weight: bold; margin: 5px 0;">${item.price} грн</p>
+                <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom: 10px;">${shortDesc}</p>
+                <button class="btn-add" data-action="buy">У кошик</button>
             </div>
         `;
         productsList.appendChild(card);
     });
 }
-renderProducts(productsDB);
 
 function applyFilters() {
     const query = document.getElementById('catalog-search').value.toLowerCase();
@@ -74,7 +84,7 @@ document.getElementById('catalog-search').addEventListener('input', applyFilters
 document.getElementById('category-filter').addEventListener('change', applyFilters);
 
 /* ==========================================================
-   Етап 3-4: Інтерактивність, кошик, форма, DOM DEMO
+   Етап 3-4: Кошик, Валідація, LocalStorage
    ========================================================== */
 let basket = JSON.parse(localStorage.getItem('user_basket')) || [];
 
@@ -92,14 +102,16 @@ productsList.addEventListener('click', (e) => {
         const modal = document.getElementById('product-modal');
         document.getElementById('modal-body').innerHTML = `
             <img src="${product.img}" style="width:100%; border-radius:8px">
-            <h2 style="margin:15px 0">${product.name}</h2>
-            <p style="font-size:1.4rem; color:var(--success-color)">${product.price} грн</p>
+            <h2 style="margin:15px 0; color:white;">${product.name}</h2>
+            <p style="font-size:1.4rem; color:var(--accent); font-weight:bold;">${product.price} грн</p>
+            <p style="color:white; margin-top:10px; line-height:1.5;">${product.desc}</p>
         `;
         modal.style.display = 'flex';
     }
 });
 
 document.querySelector('.close-modal').onclick = () => document.getElementById('product-modal').style.display = 'none';
+window.onclick = (e) => { if (e.target == document.getElementById('product-modal')) document.getElementById('product-modal').style.display = 'none'; };
 
 document.getElementById('order-form').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -108,7 +120,7 @@ document.getElementById('order-form').addEventListener('submit', (e) => {
         document.getElementById('err-phone').style.display = 'block';
     } else {
         document.getElementById('err-phone').style.display = 'none';
-        alert('Запит відправлено!');
+        alert('Запит відправлено! Дякуємо.');
         e.target.reset();
     }
 });
@@ -129,8 +141,8 @@ function updateBasket() {
     basket.forEach((item, idx) => {
         const div = document.createElement('div');
         div.className = 'basket-item';
-        div.innerHTML = `<span>${item.name}</span> 
-            <button onclick="removeFromBasket(${idx})" style="background:red; border:none; color:white; padding:3px 8px; cursor:pointer">X</button>`;
+        div.innerHTML = `<span style="color:white;">${item.name} (${item.price} грн)</span> 
+            <button onclick="removeFromBasket(${idx})" style="background:#f85149; border:none; color:white; padding:4px 10px; border-radius:4px; cursor:pointer">Видалити</button>`;
         container.appendChild(div);
     });
 
@@ -140,19 +152,44 @@ function updateBasket() {
 window.removeFromBasket = (idx) => { basket.splice(idx, 1); updateBasket(); };
 updateBasket();
 
-const demoDiv = document.createElement('div');
-demoDiv.append(document.createTextNode('Динамічний текст.'), document.createComment('Коментар.'));
-document.getElementById('dom-demo').append(demoDiv);
+// DEMO Вузлів DOM
+const demoArea = document.getElementById('dom-demo');
+const demoDiv = document.createElement('div'); 
+demoDiv.style.color = 'var(--accent)';
+demoDiv.append(document.createTextNode('Динамічний текстовий вузол створено.'), document.createComment('Коментар.'));
+demoArea.append(demoDiv);
 
 /* ==========================================================
-   AI WIDGET (RAG + QWEN)
+   Погода (API)
+   ========================================================== */
+async function fetchWeather() {
+    try {
+        const response = await fetch('https://wttr.in/Ivano-Frankivsk?format=j1');
+        const data = await response.json();
+        const pressure = data.current_condition[0].pressure; 
+        const wind = data.current_condition[0].windspeedKmph;
+
+        document.getElementById('weather-data').innerHTML = `
+            <div class="info-row"><span>Атмосферний тиск</span> <b style="color:white;">${pressure} гПа</b></div>
+            <div class="info-row"><span>Швидкість вітру</span> <b style="color:white;">${wind} км/год</b></div>
+            <p style="color: var(--success); font-size: 0.8rem; margin-top:10px;">Дані успішно отримані через Fetch API.</p>
+        `;
+    } catch (e) {
+        document.getElementById('weather-data').innerHTML = '<div class="info-row">Помилка з\'єднання.</div>';
+    }
+}
+document.querySelector('[data-target="about"]').addEventListener('click', fetchWeather, { once: true });
+
+
+/* ==========================================================
+   ШІ Асистент (Local DB + Wiki + SmolLM2 + Перекладач)
    ========================================================== */
 let aiGenerator = null;
 let isAiLoaded = false;
 const chatArea = document.getElementById('chat-area');
-
 const aiBtn = document.getElementById('ai-widget-btn');
 const aiWin = document.getElementById('ai-window');
+
 aiBtn.onclick = () => {
     aiWin.style.display = aiWin.style.display === 'flex' ? 'none' : 'flex';
     if (!isAiLoaded && aiWin.style.display === 'flex') initAI();
@@ -163,55 +200,130 @@ async function initAI() {
     if (isAiLoaded) return;
     const loadMsg = document.createElement('div');
     loadMsg.className = 'msg ai';
-    loadMsg.innerHTML = '<i>Завантажую нейромережу (Qwen 0.5B)... Це займе хвилинку.</i>';
+    loadMsg.innerHTML = '<i>Завантажую ШІ-модель... Це займе хвилинку.</i>';
     chatArea.appendChild(loadMsg);
 
     try {
-        aiGenerator = await pipeline('text-generation', 'Xenova/Qwen1.5-0.5B-Chat');
+        aiGenerator = await pipeline('text-generation', 'HuggingFaceTB/SmolLM2-360M-Instruct');
         isAiLoaded = true;
-        loadMsg.innerHTML = '<b>ШІ завантажено! Напиши мені тему (англійською), і я зроблю підсумок з Вікіпедії.</b>';
+        loadMsg.innerHTML = '<b>ШІ готовий. Я знаю весь каталог магазину та можу спілкуватись українською! Що підказати?</b>';
     } catch (e) {
-        loadMsg.innerHTML = '<b style="color:red">Помилка завантаження моделі.</b>';
+        loadMsg.innerHTML = '<b style="color:#f85149">Помилка завантаження моделі. Перевірте консоль.</b>';
     }
 }
 
-async function getHybridResponse(text) {
+// ---------------------------------------------------------
+// Секретний REST API Перекладач (MyMemory API)
+// ---------------------------------------------------------
+async function translateText(text, langPair) {
     try {
-        const url = `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(text)}&gsrlimit=1&prop=extracts&exchars=400&explaintext=1&format=json&origin=*`;
+        const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${langPair}`;
         const res = await fetch(url);
         const data = await res.json();
-        
-        let context = "";
-        if (data.query && data.query.pages) {
-            context = data.query.pages[Object.keys(data.query.pages)[0]].extract;
-        }
-        if (!context) return "I couldn't find info on Wikipedia.";
-
-        const prompt = `<|im_start|>system\nYou are a strict summarizer. Summarize Context in exactly 2 sentences in English.\nContext: ${context}<|im_end|>\n<|im_start|>user\n${text}<|im_end|>\n<|im_start|>assistant\n`;
-        const out = await aiGenerator(prompt, { max_new_tokens: 100, temperature: 0.1, return_full_text: false });
-        return `✨ <strong>AI Summary:</strong><br>${out[0].generated_text.replace(/<\|im_end\|>/g, '').trim()}`;
-    } catch (err) {
-        return "Помилка RAG.";
+        return data.responseData.translatedText;
+    } catch (e) {
+        console.error("Translation error", e);
+        return text; 
     }
 }
 
-document.getElementById('chat-send').onclick = async function() {
-    const inp = document.getElementById('chat-input');
-    const text = inp.value.trim();
-    if (!text || !isAiLoaded) return;
+async function translateToEng(text) { return await translateText(text, "uk|en"); }
+async function translateToUkr(text) { return await translateText(text, "en|uk"); }
+
+// ---------------------------------------------------------
+// Зовнішній пошук по Вікіпедії
+// ---------------------------------------------------------
+async function getFishingWikiContext(text) {
+    try {
+        const query = encodeURIComponent(text + " fishing");
+        const url = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${query}&utf8=&format=json&origin=*`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data.query && data.query.search.length > 0) {
+            return data.query.search[0].snippet.replace(/(<([^>]+)>)/gi, "");
+        }
+        return "No external info found.";
+    } catch(e) { return "API error."; }
+}
+
+// ---------------------------------------------------------
+// Головна функція генерації (Оркестрація)
+// ---------------------------------------------------------
+async function generateAIResponse(text, isExcuse = false) {
+    if (!isAiLoaded) return;
 
     chatArea.insertAdjacentHTML('beforeend', `<div class="msg user">${text}</div>`);
-    inp.value = '';
+    chatArea.scrollTop = chatArea.scrollHeight;
     
     const typing = document.createElement('div');
     typing.className = 'msg ai';
-    typing.innerHTML = '<i>Шукаю та аналізую...</i>';
+    typing.innerHTML = '<i>Аналізую та перекладаю...</i>';
     chatArea.appendChild(typing);
     chatArea.scrollTop = chatArea.scrollHeight;
 
-    const reply = await getHybridResponse(text);
-    
-    typing.remove();
-    chatArea.insertAdjacentHTML('beforeend', `<div class="msg ai">${reply}</div>`);
+    try {
+        const engQuery = isExcuse ? "Give me a funny excuse for buying a new fishing rod." : await translateToEng(text);
+
+        let prompt = "";
+        if (isExcuse) {
+            prompt = `<|im_start|>system\nYou are a funny fishing excuse generator. Reply in exactly 1 short sentence in English. User bought a new fishing rod.<|im_end|>\n<|im_start|>user\n${engQuery}<|im_end|>\n<|im_start|>assistant\n`;
+        } else {
+            const dbContext = productsDB.map(p => `${p.name}: ${p.price} UAH`).join(" | ");
+            const wikiContext = await getFishingWikiContext(engQuery);
+            // ОНОВЛЕНИЙ ПРОМПТ (ШІ вважає себе магазином)
+            prompt = `<|im_start|>system\nYou are the official AI representative of the FishPro store. Speak on behalf of the store (use "we", "our"). If the user asks "do you have", check the Store Catalog.\nStore Catalog: ${dbContext}\nExternal Knowledge: ${wikiContext}\nRULES:\n1. If recommending a product, ONLY suggest items from the Store Catalog. Mention the price.\n2. Keep answers short (1-2 sentences). Reply in English.<|im_end|>\n<|im_start|>user\n${engQuery}<|im_end|>\n<|im_start|>assistant\n`;
+        }
+
+        const out = await aiGenerator(prompt, { max_new_tokens: 150, temperature: 0.1, return_full_text: false });
+        let generatedEngText = out[0].generated_text.trim();
+
+        if (generatedEngText.includes('<|im_start|>assistant')) {
+            generatedEngText = generatedEngText.split('<|im_start|>assistant').pop().trim();
+        }
+        if (generatedEngText.includes('Store Catalog:')) {
+            generatedEngText = generatedEngText.split('RULES:')[1] || generatedEngText;
+        }
+
+        const finalUkrText = await translateToUkr(generatedEngText);
+
+        typing.remove();
+        chatArea.insertAdjacentHTML('beforeend', `<div class="msg ai">${isExcuse ? '<b>Відмазка:</b> ' : ''}${finalUkrText}</div>`);
+    } catch (e) {
+        typing.remove();
+        chatArea.insertAdjacentHTML('beforeend', `<div class="msg ai" style="color:#f85149;">Сталася помилка обробки.</div>`);
+        console.error(e);
+    }
     chatArea.scrollTop = chatArea.scrollHeight;
+}
+
+// ---------------------------------------------------------
+// Обробники подій
+// ---------------------------------------------------------
+document.querySelectorAll('.quick-btn').forEach(btn => {
+    btn.onclick = () => {
+        const question = btn.getAttribute('data-q');
+        generateAIResponse(question, question.includes('Відмазка'));
+    };
+});
+
+const chatInput = document.getElementById('chat-input');
+const sendBtn = document.getElementById('chat-send');
+
+// Відправка по кліку
+sendBtn.onclick = () => {
+    const text = chatInput.value.trim();
+    if (text) {
+        generateAIResponse(text);
+        chatInput.value = '';
+    }
 };
+
+chatInput.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        const text = chatInput.value.trim();
+        if (text) {
+            generateAIResponse(text);
+            chatInput.value = '';
+        }
+    }
+});
