@@ -2,11 +2,11 @@ import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@huggingface/transfo
 env.allowLocalModels = false;
 
 /* ==========================================================
-   Етап 1: DOM/BOM (SPA, Годинник, Navigator)
+   Phase 1: DOM/BOM (SPA, Clock, Navigator)
    ========================================================== */
 function updateClock() {
     const clock = document.getElementById('live-clock');
-    if (clock) clock.textContent = new Date().toLocaleTimeString('uk-UA');
+    if (clock) clock.textContent = new Date().toLocaleTimeString('en-US', { hour12: false });
 }
 setInterval(updateClock, 1000);
 updateClock();
@@ -29,10 +29,10 @@ navLinks.forEach(link => {
 });
 
 document.getElementById('browser-info').innerHTML = 
-    `Платформа: <b>${navigator.platform}</b> | Браузер: <b>${navigator.userAgent.split(' ')[0]}</b>`;
+    `Platform: <b>${navigator.platform}</b> | Browser: <b>${navigator.userAgent.split(' ')[0]}</b>`;
 
 /* ==========================================================
-   Етап 2: робота з даними (Завантаження з db.json)
+   Phase 2: Data Handling (Fetch from db.json)
    ========================================================== */
 let productsDB = [];
 const productsList = document.getElementById('products-list');
@@ -40,11 +40,11 @@ const productsList = document.getElementById('products-list');
 async function loadDatabase() {
     try {
         const response = await fetch('db.json');
-        if (!response.ok) throw new Error(`Статус ${response.status}`);
+        if (!response.ok) throw new Error(`Status ${response.status}`);
         productsDB = await response.json();
         renderProducts(productsDB);
     } catch (error) {
-        productsList.innerHTML = `<p style="color:#f85149; font-weight:bold;">Помилка завантаження бази даних: ${error.message}</p>`;
+        productsList.innerHTML = `<p style="color:#f85149; font-weight:bold;">Database loading error: ${error.message}</p>`;
     }
 }
 
@@ -57,15 +57,15 @@ function renderProducts(data) {
         card.className = 'product-card';
         card.dataset.id = item.id;
         
-        const shortDesc = item.desc.split('. ')[1] || item.desc; 
+        const shortDesc = item.desc.split('. ')[0] + '.' || item.desc; 
 
         card.innerHTML = `
             <img src="${item.img}" alt="${item.name}" class="product-img">
             <div class="product-info">
                 <h3>${item.name}</h3>
-                <p style="color: var(--accent); font-weight: bold; margin: 5px 0;">${item.price} грн</p>
+                <p style="color: var(--accent); font-weight: bold; margin: 5px 0;">${item.price} UAH</p>
                 <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom: 10px;">${shortDesc}</p>
-                <button class="btn-add" data-action="buy">У кошик</button>
+                <button class="btn-add" data-action="buy">Add to Cart</button>
             </div>
         `;
         productsList.appendChild(card);
@@ -84,7 +84,7 @@ document.getElementById('catalog-search').addEventListener('input', applyFilters
 document.getElementById('category-filter').addEventListener('change', applyFilters);
 
 /* ==========================================================
-   Етап 3-4: Кошик, Валідація, LocalStorage
+   Phase 3-4: Cart, Validation, LocalStorage
    ========================================================== */
 let basket = JSON.parse(localStorage.getItem('user_basket')) || [];
 
@@ -97,13 +97,13 @@ productsList.addEventListener('click', (e) => {
         e.stopPropagation();
         basket.push(product);
         updateBasket();
-        alert(`Додано: ${product.name}`);
+        alert(`Added: ${product.name}`);
     } else {
         const modal = document.getElementById('product-modal');
         document.getElementById('modal-body').innerHTML = `
             <img src="${product.img}" style="width:100%; border-radius:8px">
             <h2 style="margin:15px 0; color:white;">${product.name}</h2>
-            <p style="font-size:1.4rem; color:var(--accent); font-weight:bold;">${product.price} грн</p>
+            <p style="font-size:1.4rem; color:var(--accent); font-weight:bold;">${product.price} UAH</p>
             <p style="color:white; margin-top:10px; line-height:1.5;">${product.desc}</p>
         `;
         modal.style.display = 'flex';
@@ -120,7 +120,7 @@ document.getElementById('order-form').addEventListener('submit', (e) => {
         document.getElementById('err-phone').style.display = 'block';
     } else {
         document.getElementById('err-phone').style.display = 'none';
-        alert('Запит відправлено! Дякуємо.');
+        alert('Request sent successfully! Thank you.');
         e.target.reset();
     }
 });
@@ -131,7 +131,7 @@ function updateBasket() {
     const stats = document.getElementById('stats-area');
 
     if (basket.length === 0) {
-        container.innerHTML = '<p id="empty-basket-msg">Кошик порожній.</p>';
+        container.innerHTML = '<p id="empty-basket-msg">Cart is empty.</p>';
         stats.classList.add('hidden');
         return;
     }
@@ -141,8 +141,8 @@ function updateBasket() {
     basket.forEach((item, idx) => {
         const div = document.createElement('div');
         div.className = 'basket-item';
-        div.innerHTML = `<span style="color:white;">${item.name} (${item.price} грн)</span> 
-            <button onclick="removeFromBasket(${idx})" style="background:#f85149; border:none; color:white; padding:4px 10px; border-radius:4px; cursor:pointer">Видалити</button>`;
+        div.innerHTML = `<span style="color:white;">${item.name} (${item.price} UAH)</span> 
+            <button onclick="removeFromBasket(${idx})" style="background:#f85149; border:none; color:white; padding:4px 10px; border-radius:4px; cursor:pointer">Remove</button>`;
         container.appendChild(div);
     });
 
@@ -152,15 +152,15 @@ function updateBasket() {
 window.removeFromBasket = (idx) => { basket.splice(idx, 1); updateBasket(); };
 updateBasket();
 
-// DEMO Вузлів DOM
+// DOM Node Demonstration
 const demoArea = document.getElementById('dom-demo');
 const demoDiv = document.createElement('div'); 
 demoDiv.style.color = 'var(--accent)';
-demoDiv.append(document.createTextNode('Динамічний текстовий вузол створено.'), document.createComment('Коментар.'));
+demoDiv.append(document.createTextNode('Dynamic text node created. '), document.createComment('Comment placeholder.'));
 demoArea.append(demoDiv);
 
 /* ==========================================================
-   Погода (API)
+   Weather (External API)
    ========================================================== */
 async function fetchWeather() {
     try {
@@ -170,19 +170,18 @@ async function fetchWeather() {
         const wind = data.current_condition[0].windspeedKmph;
 
         document.getElementById('weather-data').innerHTML = `
-            <div class="info-row"><span>Атмосферний тиск</span> <b style="color:white;">${pressure} гПа</b></div>
-            <div class="info-row"><span>Швидкість вітру</span> <b style="color:white;">${wind} км/год</b></div>
-            <p style="color: var(--success); font-size: 0.8rem; margin-top:10px;">Дані успішно отримані через Fetch API.</p>
+            <div class="info-row"><span>Atmospheric Pressure</span> <b style="color:white;">${pressure} hPa</b></div>
+            <div class="info-row"><span>Wind Speed</span> <b style="color:white;">${wind} km/h</b></div>
+            <p style="color: var(--success); font-size: 0.8rem; margin-top:10px;">Data successfully retrieved via Fetch API.</p>
         `;
     } catch (e) {
-        document.getElementById('weather-data').innerHTML = '<div class="info-row">Помилка з\'єднання.</div>';
+        document.getElementById('weather-data').innerHTML = '<div class="info-row">Connection error.</div>';
     }
 }
 document.querySelector('[data-target="about"]').addEventListener('click', fetchWeather, { once: true });
 
-
 /* ==========================================================
-   ШІ Асистент (Local DB + Wiki + SmolLM2 + Перекладач)
+   AI Assistant (Local Transformers.js + SmolLM2 + Wikipedia)
    ========================================================== */
 let aiGenerator = null;
 let isAiLoaded = false;
@@ -200,38 +199,20 @@ async function initAI() {
     if (isAiLoaded) return;
     const loadMsg = document.createElement('div');
     loadMsg.className = 'msg ai';
-    loadMsg.innerHTML = '<i>Завантажую ШІ-модель... Це займе хвилинку.</i>';
+    loadMsg.innerHTML = '<i>Loading AI model... This will take a minute.</i>';
     chatArea.appendChild(loadMsg);
 
     try {
         aiGenerator = await pipeline('text-generation', 'HuggingFaceTB/SmolLM2-360M-Instruct');
         isAiLoaded = true;
-        loadMsg.innerHTML = '<b>ШІ готовий. Я знаю весь каталог магазину та можу спілкуватись українською! Що підказати?</b>';
+        loadMsg.innerHTML = '<b>AI is ready. I know the entire store catalog. What can I help you with?</b>';
     } catch (e) {
-        loadMsg.innerHTML = '<b style="color:#f85149">Помилка завантаження моделі. Перевірте консоль.</b>';
+        loadMsg.innerHTML = '<b style="color:#f85149">Error loading model. Check console.</b>';
     }
 }
 
 // ---------------------------------------------------------
-// Секретний REST API Перекладач (MyMemory API)
-// ---------------------------------------------------------
-async function translateText(text, langPair) {
-    try {
-        const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${langPair}`;
-        const res = await fetch(url);
-        const data = await res.json();
-        return data.responseData.translatedText;
-    } catch (e) {
-        console.error("Translation error", e);
-        return text; 
-    }
-}
-
-async function translateToEng(text) { return await translateText(text, "uk|en"); }
-async function translateToUkr(text) { return await translateText(text, "en|uk"); }
-
-// ---------------------------------------------------------
-// Зовнішній пошук по Вікіпедії
+// External Wikipedia Context
 // ---------------------------------------------------------
 async function getFishingWikiContext(text) {
     try {
@@ -247,9 +228,9 @@ async function getFishingWikiContext(text) {
 }
 
 // ---------------------------------------------------------
-// Головна функція генерації (Оркестрація)
+// Orchestration & Generation
 // ---------------------------------------------------------
-async function generateAIResponse(text, isExcuse = false) {
+async function generateAIResponse(text) {
     if (!isAiLoaded) return;
 
     chatArea.insertAdjacentHTML('beforeend', `<div class="msg user">${text}</div>`);
@@ -257,59 +238,45 @@ async function generateAIResponse(text, isExcuse = false) {
     
     const typing = document.createElement('div');
     typing.className = 'msg ai';
-    typing.innerHTML = '<i>Аналізую та перекладаю...</i>';
+    typing.innerHTML = '<i>Analyzing...</i>';
     chatArea.appendChild(typing);
     chatArea.scrollTop = chatArea.scrollHeight;
 
     try {
-        const engQuery = isExcuse ? "Give me a funny excuse for buying a new fishing rod." : await translateToEng(text);
-
-        let prompt = "";
-        if (isExcuse) {
-            prompt = `<|im_start|>system\nYou are a funny fishing excuse generator. Reply in exactly 1 short sentence in English. User bought a new fishing rod.<|im_end|>\n<|im_start|>user\n${engQuery}<|im_end|>\n<|im_start|>assistant\n`;
-        } else {
-            const dbContext = productsDB.map(p => `${p.name}: ${p.price} UAH`).join(" | ");
-            const wikiContext = await getFishingWikiContext(engQuery);
-            // ОНОВЛЕНИЙ ПРОМПТ (ШІ вважає себе магазином)
-            prompt = `<|im_start|>system\nYou are the official AI representative of the FishPro store. Speak on behalf of the store (use "we", "our"). If the user asks "do you have", check the Store Catalog.\nStore Catalog: ${dbContext}\nExternal Knowledge: ${wikiContext}\nRULES:\n1. If recommending a product, ONLY suggest items from the Store Catalog. Mention the price.\n2. Keep answers short (1-2 sentences). Reply in English.<|im_end|>\n<|im_start|>user\n${engQuery}<|im_end|>\n<|im_start|>assistant\n`;
-        }
+        const dbContext = productsDB.map(p => `${p.name}: ${p.price} UAH`).join(" | ");
+        const wikiContext = await getFishingWikiContext(text);
+        
+        const prompt = `<|im_start|>system\nYou are the official AI representative of the FishPro store. Speak on behalf of the store (use "we", "our"). If the user asks "do you have", check the Store Catalog.\nStore Catalog: ${dbContext}\nExternal Knowledge: ${wikiContext}\nRULES:\n1. If recommending a product, ONLY suggest items from the Store Catalog. Mention the price.\n2. Keep answers short (1-2 sentences). Reply in English.<|im_end|>\n<|im_start|>user\n${text}<|im_end|>\n<|im_start|>assistant\n`;
 
         const out = await aiGenerator(prompt, { max_new_tokens: 150, temperature: 0.1, return_full_text: false });
-        let generatedEngText = out[0].generated_text.trim();
+        let generatedText = out[0].generated_text.trim();
 
-        if (generatedEngText.includes('<|im_start|>assistant')) {
-            generatedEngText = generatedEngText.split('<|im_start|>assistant').pop().trim();
+        if (generatedText.includes('<|im_start|>assistant')) {
+            generatedText = generatedText.split('<|im_start|>assistant').pop().trim();
         }
-        if (generatedEngText.includes('Store Catalog:')) {
-            generatedEngText = generatedEngText.split('RULES:')[1] || generatedEngText;
-        }
-
-        const finalUkrText = await translateToUkr(generatedEngText);
 
         typing.remove();
-        chatArea.insertAdjacentHTML('beforeend', `<div class="msg ai">${isExcuse ? '<b>Відмазка:</b> ' : ''}${finalUkrText}</div>`);
+        chatArea.insertAdjacentHTML('beforeend', `<div class="msg ai">${generatedText}</div>`);
     } catch (e) {
         typing.remove();
-        chatArea.insertAdjacentHTML('beforeend', `<div class="msg ai" style="color:#f85149;">Сталася помилка обробки.</div>`);
+        chatArea.insertAdjacentHTML('beforeend', `<div class="msg ai" style="color:#f85149;">Processing error occurred.</div>`);
         console.error(e);
     }
     chatArea.scrollTop = chatArea.scrollHeight;
 }
 
 // ---------------------------------------------------------
-// Обробники подій
+// Event Listeners
 // ---------------------------------------------------------
 document.querySelectorAll('.quick-btn').forEach(btn => {
     btn.onclick = () => {
-        const question = btn.getAttribute('data-q');
-        generateAIResponse(question, question.includes('Відмазка'));
+        generateAIResponse(btn.getAttribute('data-q'));
     };
 });
 
 const chatInput = document.getElementById('chat-input');
 const sendBtn = document.getElementById('chat-send');
 
-// Відправка по кліку
 sendBtn.onclick = () => {
     const text = chatInput.value.trim();
     if (text) {
