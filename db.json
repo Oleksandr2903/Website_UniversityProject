@@ -4,7 +4,7 @@
     "name": "Predator Spin 240",
     "price": 2100,
     "category": "spin",
-    "desc": "Швидкий стрій, карбон TX-30. Ідеально для джигу та твічингу. Довжина: 2.4м, Тест: 5-25г.",
+    "desc": "Fast action, TX-30 carbon. Ideal for jigging and twitching. Length: 2.4m, Test: 5-25g.",
     "img": "https://picsum.photos/id/16/300/200"
   },
   {
@@ -12,7 +12,7 @@
     "name": "River Som Heavy",
     "price": 3400,
     "category": "feeder",
-    "desc": "Потужний фідер для сильної течії. Матеріал: графіт IM8. Довжина: 3.6м, Тест: до 200г.",
+    "desc": "Powerful feeder for strong currents. Material: IM8 graphite. Length: 3.6m, Test: up to 200g.",
     "img": "https://picsum.photos/id/29/300/200"
   },
   {
@@ -20,7 +20,7 @@
     "name": "Carp Master Pro",
     "price": 2850,
     "category": "carp",
-    "desc": "Далекобійне коропове вудилище з кільцем 50мм. Зручне руків'я EVA. Довжина: 3.9м, Тест: 3.5lb.",
+    "desc": "Long-casting carp rod with 50mm ring. Comfortable EVA handle. Length: 3.9m, Test: 3.5lb.",
     "img": "https://picsum.photos/id/28/300/200"
   },
   {
@@ -28,23 +28,23 @@
     "name": "Shimano Stradic FL",
     "price": 6500,
     "category": "reels",
-    "desc": "Надійна безінерційна котушка з технологією X-Ship. Плавний хід. Розмір: 3000, Підшипники: 6+1.",
+    "desc": "Reliable spinning reel with X-Ship technology. Smooth operation. Size: 3000, Bearings: 6+1.",
     "img": "https://picsum.photos/id/12/300/200"
   },
   {
     "id": 5,
-    "name": "Воблер Rapala X-Rap",
+    "name": "Rapala X-Rap Lure",
     "price": 450,
     "category": "spin",
-    "desc": "Класичний мінноу для ловлі щуки. Суспендер з шумовою камерою. Вага: 13г, Заглиблення: 1.5м.",
+    "desc": "Classic minnow for pike fishing. Suspender with a noise chamber. Weight: 13g, Depth: 1.5m.",
     "img": "https://picsum.photos/id/13/300/200"
   },
   {
     "id": 6,
-    "name": "Шнур PowerPro",
+    "name": "PowerPro Braid Line",
     "price": 820,
     "category": "reels",
-    "desc": "Міцний плетений шнур, 4 жили. Висока стійкість до абразиву. Довжина: 135м, Діаметр: 0.15мм.",
+    "desc": "Durable braided line, 4 strands. High abrasion resistance. Length: 135m, Diameter: 0.15mm.",
     "img": "https://picsum.photos/id/14/300/200"
   },
   {
@@ -52,7 +52,7 @@
     "name": "Tica Feeder Mentor",
     "price": 2900,
     "category": "reels",
-    "desc": "Спеціалізована фідерна котушка з системою байтраннер. Металева шпуля. Розмір: 4000, Підшипники: 7+1.",
+    "desc": "Specialized feeder reel with baitrunner system. Metal spool. Size: 4000, Bearings: 7+1.",
     "img": "https://picsum.photos/id/15/300/200"
   },
   {
@@ -60,7 +60,7 @@
     "name": "Keitech Swing Impact",
     "price": 250,
     "category": "spin",
-    "desc": "Їстівний силікон з активною грою. Ідеальний для окуня та судака. Розмір: 4 дюйми, В упаковці: 8 шт.",
+    "desc": "Edible silicone bait with active play. Perfect for perch and zander. Size: 4 inches, Pack: 8 pcs.",
     "img": "https://picsum.photos/id/17/300/200"
   }
 ]
