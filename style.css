@@ -1,5 +1,5 @@
 /* ==========================================================
-   Базові змінні і налаштування
+   Base variables and settings
    ========================================================== */
 :root {
     --bg-main: #0b0e14; --bg-card: #151a23; --bg-input: #06080c;
@@ -19,7 +19,7 @@ h2 { margin-bottom: 1.5rem; color: var(--text-main); font-size: 2rem; }
 .hidden { display: none; }
 
 /* ==========================================================
-   Глобальні елементи (Кнопки і інпути)
+   Global elements (Buttons and inputs)
    ========================================================== */
 .primary-btn, .submit-btn, .btn-add {
     background: var(--accent); border: none; color: #000;
@@ -39,7 +39,7 @@ h2 { margin-bottom: 1.5rem; color: var(--text-main); font-size: 2rem; }
 .search-input:focus, .filter-select:focus, .form-group input:focus, .form-group textarea:focus, .chat-input-area input:focus { border-color: var(--accent); }
 
 /* ==========================================================
-   Шапка (HEADER)
+   Header
    ========================================================== */
 header {
     display: flex; justify-content: space-between; align-items: center;
@@ -54,7 +54,7 @@ nav ul li a:hover, nav ul li a.active { color: var(--accent); }
 #live-clock { color: var(--accent); font-family: monospace; font-size: 1rem; }
 
 /* ==========================================================
-   Основний контент (SPA-секції)
+   Main content (SPA sections)
    ========================================================== */
 main { flex: 1; padding: 2rem 5%; }
 .page-section { display: none; animation: fadeIn 0.4s ease; }
@@ -65,7 +65,7 @@ main { flex: 1; padding: 2rem 5%; }
 .hero-text { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 2rem; }
 
 /* ==========================================================
-   Каталог
+   Catalog
    ========================================================== */
 .catalog-controls { display: flex; gap: 15px; margin-bottom: 20px; }
 .search-input, .filter-select { width: auto; }
@@ -82,7 +82,7 @@ main { flex: 1; padding: 2rem 5%; }
 .product-card h3 { font-size: 1.3rem; margin: 0; }
 
 /* ==========================================================
-   Кошик
+   Cart
    ========================================================== */
 .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; }
 .modal-content { background: var(--bg-card); padding: 2rem; border-radius: 12px; width: 90%; max-width: 500px; position: relative; border: 1px solid var(--border); }
@@ -92,7 +92,7 @@ main { flex: 1; padding: 2rem 5%; }
 .stats-box { background: var(--bg-card); padding: 1.5rem; border-radius: 8px; margin-top: 15px; border: 1px solid var(--border); border-left: 4px solid var(--accent); }
 
 /* ==========================================================
-   Контакти, про сайт, футер
+   Contact, About, Footer
    ========================================================== */
 .contact-wrapper { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; max-width: 1000px; margin: 0 auto; }
 .contact-info, .form-container { flex: 1; min-width: 300px; background: var(--bg-card); padding: 2rem; border-radius: 12px; border: 1px solid var(--border); }
@@ -115,7 +115,7 @@ footer { padding: 2rem 5%; background: var(--bg-card); border-top: 1px solid var
 .system-info { font-size: 0.85rem; color: var(--text-muted); }
 
 /* ==========================================================
-   Віджет ШІ
+   AI Widget
    ========================================================== */
 #ai-widget-btn {
     position: fixed; bottom: 30px; right: 30px; background: var(--bg-card); border: 1px solid var(--accent);
